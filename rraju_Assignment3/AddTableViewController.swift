@@ -7,89 +7,213 @@
 //
 
 import UIKit
-
+import CoreData
 class AddTableViewController: UITableViewController {
 
+    var selectedRow = 1;
+    var RowName = "";
+    var Authors = [String]()
+    var Genres = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        Authors = ["J. K. Rowling","James Patterson","Paulo Coelho"]
+        Genres = ["mystery","historical fiction","comedy","fantasy"]
+        if getCount("Author") == 0 {
+            addDummyAuthors()
+        }
+        
+        if getCount("Genre") ==  0{
+            addDummyGenre()
+        }
+        
+        
+        getLatestLoans()
+       
+    }
+    
+    func getLatestLoans() {
+        let request = NSURLRequest(URL: NSURL(string: "https://people.cs.clemson.edu/~rraju/Select.php")!)
+        let urlSession = NSURLSession.sharedSession()
+        var strData = ""
+        
+        
+        let task = urlSession.dataTaskWithRequest(request, completionHandler: {
+            
+            (data, response, error) -> Void in
+            
+            if let error = error {
+                print(error)
+                return }
+            // Parse JSON data
+            if let data = data {
+                let convertedStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                print("Data = \(convertedStr)")
+                // Reload table view
+//                NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+//                    self.tableView.reloadData()
+//                })
+            } })
+        task.resume()
+    }
+    
+    
+    func addDummyAuthors(){
+        
+        var count = 0
+        for author in Authors {
+            let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let managedObjectContext = appDel.managedObjectContext
+            
+            let entity = NSEntityDescription.insertNewObjectForEntityForName("Author", inManagedObjectContext: managedObjectContext)
+            entity.setValue(author, forKey: "aname")
+            entity.setValue(count, forKey: "aid")
+            count = count + 1
+            do {
+                
+                try managedObjectContext.save()
+                
+                
+            } catch {
+                
+                print("There was a problem!")
+                
+            }
+            
+        }
+        
+        
+        
+    }
+    
+    
+    func addDummyGenre(){
+        var count = 0
+        
+        
+        for author in Genres {
+            let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let managedObjectContext = appDel.managedObjectContext
+            
+            let entity = NSEntityDescription.insertNewObjectForEntityForName("Genre", inManagedObjectContext: managedObjectContext)
+            entity.setValue(author, forKey: "gname")
+            entity.setValue(count, forKey: "gid")
+            count = count + 1
+            do {
+                
+                try managedObjectContext.save()
+                
+                
+            } catch {
+                
+                print("There was a problem!")
+                
+            }
+            
+        }
+        
+        
+        
     }
 
+    
+    func getCount(name: String)->Int{
+        
+        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedObjectContext = appDel.managedObjectContext
+        let fetchRequest = NSFetchRequest()
+        
+        // Create Entity Description
+        let entityDescription = NSEntityDescription.entityForName(name, inManagedObjectContext: managedObjectContext)
+        
+        // Configure Fetch Request
+        fetchRequest.entity = entityDescription
+        
+        do {
+            let result = try managedObjectContext.executeFetchRequest(fetchRequest)
+            
+            if (result.count > 0) {
+                
+                return result.count
+            }else{
+                return 0
+                
+            }
+        }
+            
+        catch {
+            let fetchError = error as NSError
+            print(fetchError)
+        }
+        
+        
+        return 0
+        
+        
+    }
+    
+    
+
+    
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
-
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if indexPath.row == 0
+        {
+            self .performSegueWithIdentifier("books", sender: self);
+        }else{
+            
+            self.selectedRow = indexPath.row
+            self.DecidingRow(self.selectedRow)
+            self .performSegueWithIdentifier("general", sender: self);
+            
+        }
+        
+        
+        
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    
+    func DecidingRow(row: Int)  {
+        
+        switch row {
+        case 1:
+            RowName = "Author"
+            break
+        case 2:
+            RowName = "Genre"
+            break
+            
+        default:
+            break
+        }
+        
+        
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        
+        if segue.identifier == "books" {
+            
+        }else{
+            if let destVC = segue.destinationViewController as? AGViewController {
+                destVC.receiveName(RowName)
+            }
+        }
     }
-    */
 
 }

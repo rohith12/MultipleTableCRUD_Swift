@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="Author" representedClassName=".Author" syncable="YES">
+        <attribute name="aid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="aname" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="BookAuthor" representedClassName=".BookAuthor" syncable="YES">
+        <attribute name="aid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="baid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="bid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="BookGenre" representedClassName=".BookGenre" syncable="YES">
+        <attribute name="bgid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="bid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="gid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Books" representedClassName=".Books" syncable="YES">
+        <attribute name="bid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="bname" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="bprice" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <entity name="Genre" representedClassName=".Genre" syncable="YES">
+        <attribute name="gid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="gname" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Books" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="Author" positionX="-54" positionY="27" width="128" height="75"/>
+        <element name="Genre" positionX="-36" positionY="36" width="128" height="75"/>
+        <element name="BookGenre" positionX="-18" positionY="54" width="128" height="90"/>
+        <element name="BookAuthor" positionX="0" positionY="81" width="128" height="90"/>
+    </elements>
 </model>
