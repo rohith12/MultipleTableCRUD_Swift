@@ -16,7 +16,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        print(paths[0])
+        
+        let userId = NSUserDefaults.standardUserDefaults().valueForKey("userId")
+        
+        if (userId != nil){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+           
+            
+            let main = storyboard.instantiateViewControllerWithIdentifier("tab") as! TabViewController
+            
+            window?.rootViewController = main
+            
+            
+//            UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+//            SWRevealViewController *main = (SWRevealViewController *)[mainStoryboard instantiateViewControllerWithIdentifier:@"SWRevealViewController"];
+//            
+//            self.window.rootViewController = main;
+            
+        }else{
+            
+            
+        }
+        
+                // Override point for customization after application launch.
         return true
     }
 
